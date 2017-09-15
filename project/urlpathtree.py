@@ -1,6 +1,6 @@
-import json
-import os
-import requests
+import json, os, re, requests
+
+from swagger_utils import get_swagger_api_definition
 
 REST_METHODS = ['get', 'post', 'put', 'delete']
 
@@ -17,8 +17,12 @@ class urlpathnode(object):
         # dictionary of child nodes, with node names as keys
         self.children = {}
 
-    def __eq__(self, other_name):
-        return other_name == self.name
+    def is_wildcard_node(self):
+        pattern = re.compile("^{.+}$")
+        if pattern.match(self.name):
+            return True
+
+        return False
 
     def to_string(self, accumulator=""):
         s = "{}{}{} ({}) ({})".format(
@@ -70,6 +74,13 @@ class urlpathnode(object):
     def get_child_names(self):
         return sorted([child.name for child in self.children])
 
+    def find_matching_children(self, token):
+        matches = [
+            child for child in self.children.values()
+            if child.is_wildcard_node() or  token == child.name]
+
+        return matches
+
 class urlpathtree(object):
     def __init__(self, swagger_json):
         self.root = urlpathnode("/", False)
@@ -95,18 +106,12 @@ class urlpathtree(object):
         return str(self.root)
 
 if __name__ == "__main__":
-    # get Swagger JSON from API server
-    api_url = "http://localhost:5123/swagger.json"
-    swagger_data = requests.get(api_url).json()
-
-    # save as swagger.json
     swagger_filename = "swagger.json"
     json_path = os.path.join(
         os.path.dirname(__file__),
         swagger_filename)
 
-    with open(json_path, "w") as f:
-        f.write(json.dumps(swagger_data, indent=4, sort_keys=True))
+    get_swagger_api_definition("localhost", "5123", json_path)
 
     # generate path tree
     u = urlpathtree(swagger_filename)
