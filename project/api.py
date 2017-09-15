@@ -78,6 +78,13 @@ class BookDAO(object):
                 return book
         api.abort(404, "Book doesn't exist")
 
+    def get_by_author(self, author_id):
+        books = []
+        for book in self.books:
+            if book['author_id'] == str(author_id):
+                books.append(book)
+        return books
+
     def create(self, data):
         author_id = data.get("author_id")
         title = data.get("title")
@@ -157,6 +164,52 @@ class Author(Resource):
     def put(self, id):
         '''Update an author given its identifier'''
         return ADAO.update(id, api.payload)
+
+author_article_list = api.model('AuthorArticleList', {
+    'id':   fields.Integer(readOnly=True, description='Unique identifier'),
+    'name': fields.String(required=True, description='The name of the article')
+})
+@ns_author.route('/<int:id>/publications/articles')
+@ns_author.response(404, 'Author not found')
+@ns_author.param('id', 'The author identifier')
+class AuthorArticles(Resource):
+    @ns_author.doc('get_author_articles')
+    @ns_author.marshal_list_with(author_article_list)
+    def get(self, id):
+        '''Fetch a given resource'''
+        return []
+
+author_book_list = api.model('AuthorBookList', {
+    'id':       fields.Integer(readOnly=True, description='Unique author identifier'),
+    'author':   fields.String(required=True, description='Author name'),
+    'title':    fields.String(required=True, description='Book title')
+})
+@ns_author.route('/<int:id>/publications/books')
+@ns_author.response(404, 'Author not found')
+@ns_author.param('id', 'The author identifier')
+class AuthorBooks(Resource):
+    @ns_author.doc('get_author_books')
+    @ns_author.marshal_list_with(author_book_list)
+    def get(self, id):
+        '''Fetch a given resource'''
+        book_list = BDAO.get_by_author(id)
+        for book in book_list:
+            book["author"] = ADAO.get(id).get('name')
+        return book_list
+
+author_short_story_list = api.model('AuthorShortStoryList', {
+    'id':   fields.Integer(readOnly=True, description='Unique identifier'),
+    'name': fields.String(required=True, description='The name of the short story')
+})
+@ns_author.route('/<int:id>/publications/short-stories')
+@ns_author.response(404, 'Author not found')
+@ns_author.param('id', 'The author identifier')
+class AuthorShortStories(Resource):
+    @ns_author.doc('get_author_short_stories')
+    @ns_author.marshal_list_with(author_short_story_list)
+    def get(self, id):
+        '''Fetch a given resource'''
+        return []
 
 @ns_book.route('/')
 class BookList(Resource):
