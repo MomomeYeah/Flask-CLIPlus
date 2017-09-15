@@ -20,7 +20,7 @@ class urlpathnode(object):
     def __eq__(self, other_name):
         return other_name == self.name
 
-    def print_node(self, accumulator=""):
+    def to_string(self, accumulator=""):
         s = "{}{}{} ({}) ({})".format(
             accumulator,
             self.name,
@@ -29,8 +29,11 @@ class urlpathnode(object):
             self.descendent_methods)
         accumulator += "    "
         for child in self.children.values():
-            s += "\n{}".format(child.print_node(accumulator))
+            s += "\n{}".format(child.to_string(accumulator))
         return s
+
+    def __str__(self):
+        return self.to_string()
 
     def add_child_url(self, child_url, methods):
         nodes = child_url.strip("/").split("/")
@@ -69,19 +72,27 @@ class urlpathnode(object):
 
 class urlpathtree(object):
     def __init__(self, swagger_json):
-        with open(swagger_json) as f:
-            file_data = f.read()
-
-        json_data = json.loads(file_data)
-
         self.root = urlpathnode("/", False)
 
-        paths = json_data.get("paths")
-        for path in paths.keys():
-            methods = [method for method in paths[path].keys() if method in REST_METHODS]
-            self.root.add_child_url(path, methods)
+        try:
+            with open(swagger_json) as f:
+                file_data = f.read()
 
-        print self.root.print_node()
+            json_data = json.loads(file_data)
+
+            paths = json_data.get("paths")
+            for path in paths.keys():
+                methods = [method for method in paths[path].keys() if method in REST_METHODS]
+                self.root.add_child_url(path, methods)
+        # File DNE
+        except IOError as e:
+            pass
+        # Unable to parse JSON object
+        except ValueError as e:
+            pass
+
+    def __str__(self):
+        return str(self.root)
 
 if __name__ == "__main__":
     # get Swagger JSON from API server
@@ -99,3 +110,4 @@ if __name__ == "__main__":
 
     # generate path tree
     u = urlpathtree(swagger_filename)
+    print str(u)
