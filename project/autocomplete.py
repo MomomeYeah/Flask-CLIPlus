@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 
 from swagger_utils import get_swagger_api_definition
@@ -18,7 +20,6 @@ class autocomplete(object):
 
         # generate path tree
         self.path_tree = urlpathtree(swagger_filename)
-        print str(self.path_tree)
 
     def find_node(self, node, tokens):
         num_tokens = len(tokens)
@@ -45,6 +46,10 @@ class autocomplete(object):
         # return all nodes that we found
         return nodes
 
+    # TODO: enable autocomplete for root node.  Root node should allow CRUD
+    # operations corresponding to allowed REST operations
+    #
+    # TODO: entering a wildcard with a value like {id} doesn't seem to work?
     def find_node_from_root(self, tokens):
         if not tokens:
             return None
@@ -52,8 +57,43 @@ class autocomplete(object):
         # seed self.find_node with the path tree root node
         return self.find_node(self.path_tree.root, tokens)
 
+    def get_suggestions(self, tokens):
+        # final token might be either a full or a partial word.  Either way
+        # we want to suggest completions
+        suggestions = []
+
+        # assume full word first
+        nodes = self.find_node_from_root(tokens)
+        if nodes:
+            for node in nodes:
+                suggestions.extend(node.get_child_names())
+
+        # assume partial word
+        if len(tokens) == 0:
+            return suggestions
+
+        # assuming the last word we entered is a partial word, extract this
+        # and perform autocomplete as above on original input minus this
+        # last word
+        partial, rest = tokens[-1], tokens[:-1]
+        nodes = self.find_node_from_root(rest)
+        if nodes:
+            for node in nodes:
+                # for each autocomplete suggestion, include it if our partial
+                # word is a prefix of the suggestion.  Exclude it if our partial
+                # matches the suggestion exactly
+                partial_suggestions = [
+                    name for name in node.get_child_names()
+                    if name.startswith(partial) and name != partial]
+
+                suggestions.extend(partial_suggestions)
+
+        # remove duplicate by converting to set and back to list
+        return list(set(suggestions))
+
 if __name__ == "__main__":
     ac = autocomplete()
+    print str(ac.path_tree)
 
     token_tests= [
         ["books", "2"],
@@ -65,7 +105,9 @@ if __name__ == "__main__":
 
     for test in token_tests:
         nodes = ac.find_node_from_root(test)
+        suggestions = ac.get_suggestions(test)
 
         print "for {}, nodes are:".format(test)
         for node in nodes:
-            print str(node)
+            print "Node is {}".format(node)
+            print "Suggestions are {}".format(suggestions)

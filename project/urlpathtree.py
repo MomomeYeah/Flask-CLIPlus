@@ -72,7 +72,7 @@ class urlpathnode(object):
             child.descendent_methods = list(set(child.descendent_methods))
 
     def get_child_names(self):
-        return sorted([child.name for child in self.children])
+        return sorted([child for child in self.children])
 
     def find_matching_children(self, token):
         matches = [
