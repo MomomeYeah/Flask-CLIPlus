@@ -1,6 +1,6 @@
 import json, os, re, requests
 
-from swagger_utils import get_swagger_api_definition
+from swagger_utils import get_swagger_api_definition, get_method_body_parameters
 
 REST_METHODS = ['get', 'post', 'put', 'delete']
 
@@ -11,7 +11,7 @@ class urlpathnode(object):
         # does the path from the root node to this node represent a complete URL?
         self.is_full_url = is_full_url
         # what REST methods are available on this node?
-        self.methods = []
+        self.methods = {}
         # what REST methods are available on this node or children of this node?
         self.descendent_methods = []
         # dictionary of child nodes, with node names as keys
@@ -39,16 +39,17 @@ class urlpathnode(object):
     def __str__(self):
         return self.to_string()
 
-    def add_child_url(self, child_url, methods):
+    def add_child_url(self, child_url, methods, definitions):
         nodes = child_url.strip("/").split("/")
-        self.add_child(nodes, methods)
+        self.add_child(nodes, methods, definitions)
 
-    def add_child(self, child_url_nodes, methods):
+    def add_child(self, child_url_nodes, methods, definitions):
         first, rest = child_url_nodes[0], child_url_nodes[1:]
+        method_keys = [method for method in methods]
 
         # some descendent of this node will have all members of `methods`
         # available, so add all members of `methods` to `descendent_methods`
-        self.descendent_methods.extend(methods)
+        self.descendent_methods.extend(method_keys)
         self.descendent_methods = list(set(self.descendent_methods))
 
         # find the appropriate child node based on the first URL segment.  If
@@ -61,15 +62,17 @@ class urlpathnode(object):
 
         # if there are more child nodes to process, do so recursively
         if rest:
-            child.add_child(rest, methods)
+            child.add_child(rest, methods, definitions)
         # if we are on the last child node, add the provided `methods` to this
         # node's `methods` list, as well as `descendent_methods` list
         else:
             child.is_full_url = True
-            child.methods.extend(methods)
-            child.methods = list(set(child.methods))
-            child.descendent_methods.extend(methods)
+            child.descendent_methods.extend(method_keys)
             child.descendent_methods = list(set(child.descendent_methods))
+
+            for method, data in methods.iteritems():
+                body_parameters = get_method_body_parameters(data, definitions)
+                child.methods[method] = body_parameters
 
     def get_child_names(self):
         return sorted([child for child in self.children])
@@ -91,10 +94,16 @@ class urlpathtree(object):
 
             json_data = json.loads(file_data)
 
+            definitions = json_data.get("definitions")
             paths = json_data.get("paths")
+
             for path in paths.keys():
-                methods = [method for method in paths[path].keys() if method in REST_METHODS]
-                self.root.add_child_url(path, methods)
+                methods = {
+                    method: data
+                    for method, data in paths[path].iteritems()
+                    if method in REST_METHODS
+                }
+                self.root.add_child_url(path, methods, definitions)
         # File DNE
         except IOError as e:
             pass
