@@ -77,7 +77,7 @@ class urlpathnode(object):
     def find_matching_children(self, token):
         matches = [
             child for child in self.children.values()
-            if child.is_wildcard_node() or  token == child.name]
+            if child.is_wildcard_node() or token == child.name]
 
         return matches
 

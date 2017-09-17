@@ -46,13 +46,15 @@ class autocomplete(object):
         # return all nodes that we found
         return nodes
 
-    # TODO: enable autocomplete for root node.  Root node should allow CRUD
-    # operations corresponding to allowed REST operations
+    # TODO: where do CRED/REST operations come in? Root node?
     #
     # TODO: entering a wildcard with a value like {id} doesn't seem to work?
+    #
+    # TODO: POST/PUT params: key=value format
+    # TODO: params: quotes to allow spaces, or not?
     def find_node_from_root(self, tokens):
         if not tokens:
-            return None
+            return [self.path_tree.root]
 
         # seed self.find_node with the path tree root node
         return self.find_node(self.path_tree.root, tokens)
