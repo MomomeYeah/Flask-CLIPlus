@@ -14,3 +14,9 @@ This will start the Flask development server on http://0.0.0.0:5123.  On the hos
 ## API
 
 A full JSON representation of the sample API definition can be found at http://localhost:15123/swagger.json
+
+## Usage
+
+To install the autocomplete module, run `./install.sh`. Then, either exit the vagrant SSH session and login again, run `bash --login`, or source the autocomplete file with `. /etc/bash_completion.d/cli_plus`.
+
+Bash autocomplete requires a program name, so for demonstration purposes this is hardcoded to `./autocomplete.py` which must be run from within `/vagrant/project`.
