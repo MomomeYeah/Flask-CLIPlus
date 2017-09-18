@@ -141,7 +141,7 @@ class AuthorList(Resource):
         return ADAO.create(api.payload), 201
 
 
-@ns_author.route('/<int:id>')
+@ns_author.route('/<int:id>/')
 @ns_author.response(404, 'Author not found')
 @ns_author.param('id', 'The author identifier')
 class Author(Resource):
@@ -169,7 +169,7 @@ author_article_list = api.model('AuthorArticleList', {
     'id':   fields.Integer(readOnly=True, description='Unique identifier'),
     'name': fields.String(required=True, description='The name of the article')
 })
-@ns_author.route('/<int:id>/publications/articles')
+@ns_author.route('/<int:id>/publications/articles/')
 @ns_author.response(404, 'Author not found')
 @ns_author.param('id', 'The author identifier')
 class AuthorArticles(Resource):
@@ -184,7 +184,7 @@ author_book_list = api.model('AuthorBookList', {
     'author':   fields.String(required=True, description='Author name'),
     'title':    fields.String(required=True, description='Book title')
 })
-@ns_author.route('/<int:id>/publications/books')
+@ns_author.route('/<int:id>/publications/books/')
 @ns_author.response(404, 'Author not found')
 @ns_author.param('id', 'The author identifier')
 class AuthorBooks(Resource):
@@ -201,7 +201,7 @@ author_short_story_list = api.model('AuthorShortStoryList', {
     'id':   fields.Integer(readOnly=True, description='Unique identifier'),
     'name': fields.String(required=True, description='The name of the short story')
 })
-@ns_author.route('/<int:id>/publications/short-stories')
+@ns_author.route('/<int:id>/publications/short-stories/')
 @ns_author.response(404, 'Author not found')
 @ns_author.param('id', 'The author identifier')
 class AuthorShortStories(Resource):
@@ -228,7 +228,7 @@ class BookList(Resource):
         return BDAO.create(api.payload), 201
 
 
-@ns_book.route('/<int:id>')
+@ns_book.route('/<int:id>/')
 @ns_book.response(404, 'Book not found')
 @ns_book.param('id', 'The book identifier')
 class Book(Resource):

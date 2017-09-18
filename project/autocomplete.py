@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-import os
+import os, sys
 
-from rest_utils import print_rest_api_response, rest_call_from_tokens
+from rest_utils import CRUD_METHODS, REST_METHODS
+from rest_utils import print_rest_api_response, rest_call_from_tokens, rest_methods_to_crud
 from swagger_utils import get_swagger_api_definition
 from urlpathtree import urlpathtree
 
@@ -61,6 +62,16 @@ class autocomplete(object):
         return self.find_node(self.path_tree.root, tokens)
 
     def get_suggestions(self, tokens):
+        # if nothing has been entered, suggest the valid descendent_methods
+        # as per the root node
+        if not tokens:
+            rest_methods = self.path_tree.root.descendent_methods
+            return rest_methods_to_crud(rest_methods)
+
+        method = None
+        if tokens[0] in CRUD_METHODS:
+            method, tokens = tokens[0], tokens[1:]
+
         # final token might be either a full or a partial word.  Either way
         # we want to suggest completions
         suggestions = []
@@ -74,6 +85,10 @@ class autocomplete(object):
         # assume partial word
         if len(tokens) == 0:
             return suggestions
+
+        if not method and len(tokens) == 1:
+            rest_methods = self.path_tree.root.descendent_methods
+            return rest_methods_to_crud(rest_methods)
 
         # assuming the last word we entered is a partial word, extract this
         # and perform autocomplete as above on original input minus this
@@ -99,11 +114,11 @@ if __name__ == "__main__":
     print "{}\n\n".format(ac.path_tree)
 
     token_tests= [
-        ["books", "2"],
-        ["authors"],
-        ["authors", "1"],
-        ["authors", "1", "publications"],
-        ["authors", "1", "mismatch"],
+        ["get", "books", "2"],
+        ["get", "authors"],
+        ["get", "authors", "1"],
+        ["get", "authors", "1", "publications"],
+        ["get", "authors", "1", "mismatch"],
     ]
 
     for test in token_tests:
@@ -120,3 +135,16 @@ if __name__ == "__main__":
         print_rest_api_response(results)
 
         print "\n\n"
+
+    tokens = sys.argv[1:]
+    nodes = ac.find_node_from_root(tokens)
+    suggestions = ac.get_suggestions(tokens)
+    results = rest_call_from_tokens("localhost", "5123", tokens)
+
+    print "For tokens {}, nodes are:".format(tokens)
+    for node in nodes:
+        print "Node is {}".format(node)
+
+    print "Suggestions are {}".format(suggestions)
+    print "Results are: "
+    print_rest_api_response(results)
