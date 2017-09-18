@@ -1,4 +1,4 @@
-import json, os, re, requests
+import json, os, re
 
 from swagger_utils import get_swagger_api_definition, get_method_body_parameters
 

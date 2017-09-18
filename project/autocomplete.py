@@ -2,6 +2,7 @@
 
 import os
 
+from rest_utils import print_rest_api_response, rest_call_from_tokens
 from swagger_utils import get_swagger_api_definition
 from urlpathtree import urlpathtree
 
@@ -95,7 +96,7 @@ class autocomplete(object):
 
 if __name__ == "__main__":
     ac = autocomplete()
-    print str(ac.path_tree)
+    print "{}\n\n".format(ac.path_tree)
 
     token_tests= [
         ["books", "2"],
@@ -108,8 +109,14 @@ if __name__ == "__main__":
     for test in token_tests:
         nodes = ac.find_node_from_root(test)
         suggestions = ac.get_suggestions(test)
+        results = rest_call_from_tokens("localhost", "5123", test)
 
-        print "for {}, nodes are:".format(test)
+        print "For tokens {}, nodes are:".format(test)
         for node in nodes:
             print "Node is {}".format(node)
-            print "Suggestions are {}".format(suggestions)
+
+        print "Suggestions are {}".format(suggestions)
+        print "Results are: "
+        print_rest_api_response(results)
+
+        print "\n\n"
