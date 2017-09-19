@@ -91,9 +91,22 @@ class autocomplete(object):
         if len(tokens) == 0:
             return suggestions
 
+        # if we've got one token, there are two possibilities:
+        #  - it's a partial entry of a valid method - autocomplete this
+        #  - it's not a valid method - return the suggestions list as-is
         if not method and len(tokens) == 1:
             rest_methods = self.path_tree.root.descendent_methods
-            return rest_methods_to_crud(rest_methods)
+            crud_methods = rest_methods_to_crud(rest_methods)
+
+            # is what we've already entered a partial match for a CRUD method?
+            matching_crud_methods = [
+                method for method in crud_methods
+                if method.startswith(tokens[0])
+            ]
+            if not matching_crud_methods:
+                return suggestions
+
+            return crud_methods
 
         # assuming the last word we entered is a partial word, extract this
         # and perform autocomplete as above on original input minus this
