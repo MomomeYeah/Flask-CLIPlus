@@ -27,3 +27,4 @@ From within the `/vagrant/project` directory, start typing a command starting wi
 
 * entering a wildcard with a value like {id} seems to make further autocomplete not process, but directory listing returned instead.  Figure out a way to fix this, or just replace {id} with something else, e.g. (id)?
 * param names/values with spaces: handle these or not?  Use quotes?
+* if a param is a file type, send this as a proper file.  Need to store param types as well as names in path tree
