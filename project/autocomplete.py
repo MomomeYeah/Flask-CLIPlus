@@ -83,6 +83,10 @@ class autocomplete(object):
                 suggestions.extend(
                     node.get_children_having_descendent_method(method))
 
+                if method in node.methods and node.methods[method]:
+                    params = ["{}=".format(m) for m in node.methods[method]]
+                    suggestions.extend(params)
+
         # assume partial word
         if len(tokens) == 0:
             return suggestions
@@ -104,9 +108,16 @@ class autocomplete(object):
                 partial_suggestions = [
                     name for name in
                     node.get_children_having_descendent_method(method)
-                    if name.startswith(partial) and name != partial]
-
+                    if name.startswith(partial) and name != partial
+                ]
                 suggestions.extend(partial_suggestions)
+
+                if method in node.methods and node.methods[method]:
+                    partial_params = [
+                        "{}=".format(m) for m in node.methods[method]
+                        if m.startswith(partial) and m != partial
+                    ]
+                    suggestions.extend(partial_params)
 
         # remove duplicate by converting to set and back to list
         return list(set(suggestions))

@@ -9,7 +9,7 @@ _cli_plus()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     #echo "cword is ${COMP_CWORD}"
-    #echo "asda: ${words} - ${cur}"
+    #echo "words / cur: ${words} / ${cur}"
 
     # the list of autocomplete suggestions we generate
     opts=$(python /vagrant/project/cli_plus.py ${words})

@@ -27,5 +27,4 @@ From within the `/vagrant/project` directory, start typing a command starting wi
 
 * better handle scenario where first token isn't a CRUD
 * entering a wildcard with a value like {id} seems to make further autocomplete not process
-* suggest and handle POST/PUT params: key=value format
-* params: quotes to allow spaces, or not?
+* param names/values with spaces: handle these or not?  Use quotes?
