@@ -3,7 +3,8 @@
 import os, sys
 
 from rest_utils import CRUD_METHODS, REST_METHODS
-from rest_utils import print_rest_api_response, rest_call_from_tokens, rest_methods_to_crud
+from rest_utils import print_rest_api_response, rest_call_from_tokens
+from rest_utils import crud_to_rest, rest_methods_to_crud
 from swagger_utils import get_swagger_api_definition
 from urlpathtree import urlpathtree
 
@@ -48,7 +49,7 @@ class autocomplete(object):
         # return all nodes that we found
         return nodes
 
-    # TODO: where do CRED/REST operations come in? Root node?
+    # TODO: handle scenario where first token isn't a CRUD
     #
     # TODO: entering a wildcard with a value like {id} doesn't seem to work?
     #
@@ -71,6 +72,7 @@ class autocomplete(object):
         method = None
         if tokens[0] in CRUD_METHODS:
             method, tokens = tokens[0], tokens[1:]
+            method = crud_to_rest(method)
 
         # final token might be either a full or a partial word.  Either way
         # we want to suggest completions
@@ -80,7 +82,8 @@ class autocomplete(object):
         nodes = self.find_node_from_root(tokens)
         if nodes:
             for node in nodes:
-                suggestions.extend(node.get_child_names())
+                suggestions.extend(
+                    node.get_children_having_descendent_method(method))
 
         # assume partial word
         if len(tokens) == 0:
@@ -101,7 +104,8 @@ class autocomplete(object):
                 # word is a prefix of the suggestion.  Exclude it if our partial
                 # matches the suggestion exactly
                 partial_suggestions = [
-                    name for name in node.get_child_names()
+                    name for name in
+                    node.get_children_having_descendent_method(method)
                     if name.startswith(partial) and name != partial]
 
                 suggestions.extend(partial_suggestions)

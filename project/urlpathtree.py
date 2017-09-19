@@ -74,8 +74,13 @@ class urlpathnode(object):
                 body_parameters = get_method_body_parameters(data, definitions)
                 child.methods[method] = body_parameters
 
-    def get_child_names(self):
-        return sorted([child for child in self.children])
+    # return all children of the current node whose decendent method list
+    # contains the given REST method
+    def get_children_having_descendent_method(self, method):
+        return sorted([
+            name for name, child in self.children.iteritems()
+            if method in child.descendent_methods
+            ])
 
     def find_matching_children(self, token):
         matches = [

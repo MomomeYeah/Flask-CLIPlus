@@ -3,9 +3,23 @@ import json, requests
 CRUD_METHODS = ['get', 'create', 'update', 'delete']
 REST_METHODS = ['get', 'post', 'put', 'delete']
 
+def crud_to_rest(crud_method):
+    if crud_method not in CRUD_METHODS:
+        return None
+
+    index = CRUD_METHODS.index(crud_method)
+    return REST_METHODS[index]
+
+def rest_to_crud(rest_method):
+    if rest_method not in REST_METHODS:
+        return None
+
+    index = REST_METHODS.index(rest_method)
+    return CRUD_METHODS[index]
+
 def rest_methods_to_crud(rest_method_list):
     return [
-        CRUD_METHODS[REST_METHODS.index(i)]
+        rest_to_crud(i)
         for i in rest_method_list]
 
 def rest_call_from_tokens(host, port, tokens):
