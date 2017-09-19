@@ -2,14 +2,10 @@
 
 import os, sys
 
+import rest_utils
 from rest_utils import CRUD_METHODS, REST_METHODS
-from rest_utils import print_rest_api_response, rest_call_from_tokens
-from rest_utils import crud_to_rest, rest_methods_to_crud
 from swagger_utils import get_swagger_api_definition
 from urlpathtree import urlpathtree
-
-CRUD_METHODS = ['get', 'create', 'update', 'delete']
-REST_METHODS = ['get', 'post', 'put', 'delete']
 
 class autocomplete(object):
     def __init__(self):
@@ -65,12 +61,12 @@ class autocomplete(object):
         # as per the root node
         if not tokens:
             rest_methods = self.path_tree.root.descendent_methods
-            return rest_methods_to_crud(rest_methods)
+            return rest_utils.rest_methods_to_crud(rest_methods)
 
         method = None
         if tokens[0] in CRUD_METHODS:
             method, tokens = tokens[0], tokens[1:]
-            method = crud_to_rest(method)
+            method = rest_utils.crud_to_rest(method)
 
         # final token might be either a full or a partial word.  Either way
         # we want to suggest completions
@@ -87,8 +83,9 @@ class autocomplete(object):
                     params = ["{}=".format(m) for m in node.methods[method]]
                     suggestions.extend(params)
 
-        # assume partial word
-        if len(tokens) == 0:
+        # now assume partial word. If the first token was a valid CRUD method
+        # then it will have been removed, and token list can be empty
+        if not tokens:
             return suggestions
 
         # if we've got one token, there are two possibilities:
@@ -96,7 +93,7 @@ class autocomplete(object):
         #  - it's not a valid method - return the suggestions list as-is
         if not method and len(tokens) == 1:
             rest_methods = self.path_tree.root.descendent_methods
-            crud_methods = rest_methods_to_crud(rest_methods)
+            crud_methods = rest_utils.rest_methods_to_crud(rest_methods)
 
             # is what we've already entered a partial match for a CRUD method?
             matching_crud_methods = [
@@ -150,7 +147,7 @@ if __name__ == "__main__":
     for test in token_tests:
         nodes = ac.find_node_from_root(test)
         suggestions = ac.get_suggestions(test)
-        results = rest_call_from_tokens("localhost", "5123", test)
+        results = rest_utils.rest_call_from_tokens("localhost", "5123", test)
 
         print "For tokens {}, nodes are:".format(test)
         for node in nodes:
@@ -158,14 +155,14 @@ if __name__ == "__main__":
 
         print "Suggestions are {}".format(suggestions)
         print "Results are: "
-        print_rest_api_response(results)
+        rest_utils.print_rest_api_response(results)
 
         print "\n\n"
 
     tokens = sys.argv[1:]
     nodes = ac.find_node_from_root(tokens)
     suggestions = ac.get_suggestions(tokens)
-    results = rest_call_from_tokens("localhost", "5123", tokens)
+    results = rest_utils.rest_call_from_tokens("localhost", "5123", tokens)
 
     print "For tokens {}, nodes are:".format(tokens)
     for node in nodes:
@@ -173,4 +170,4 @@ if __name__ == "__main__":
 
     print "Suggestions are {}".format(suggestions)
     print "Results are: "
-    print_rest_api_response(results)
+    rest_utils.print_rest_api_response(results)

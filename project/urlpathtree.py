@@ -1,8 +1,7 @@
 import json, os, re
 
+from rest_utils import REST_METHODS
 from swagger_utils import get_swagger_api_definition, get_method_body_parameters
-
-REST_METHODS = ['get', 'post', 'put', 'delete']
 
 class urlpathnode(object):
     def __init__(self, name, is_full_url=False):

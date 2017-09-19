@@ -99,11 +99,14 @@ def rest_call_from_tokens(host, port, tokens):
 
 def print_rest_api_response(response):
     print "response code is {}".format(response.status_code)
-    if response.status_code in [200, 201, 204, 400]:
+    if response.status_code in [200, 201, 400]:
         try:
             print "{}".format(json.dumps(response.json(), indent=4, sort_keys=True))
         except ValueError as e:
             print "Invalid response"
+    # deletion results in status code 204 which should have no content
+    elif response.status_code == 204:
+        print "Deletion successful"
     # 404 can either be URL not found, or an error message, as JSON
     elif response.status_code == 404:
         try:
