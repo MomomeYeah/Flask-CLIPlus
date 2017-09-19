@@ -20,3 +20,12 @@ A full JSON representation of the sample API definition can be found at http://l
 To install the autocomplete module, run `./install.sh`. Then, either exit the vagrant SSH session and login again, run `bash --login`, or source the autocomplete file with `. /etc/bash_completion.d/cli_plus`.
 
 Bash autocomplete requires a program name, so for demonstration purposes this is hardcoded to `./autocomplete.py` which must be run from within `/vagrant/project`.
+
+From within the `/vagrant/project` directory, start typing a command starting with `./autocomplete.py` and the program will provide autocomplete suggestions using `[TAB]` as you would expect.  Running the program will take the given input and call the REST method it represents, printing output to the terminal.
+
+## TODO
+
+* better handle scenario where first token isn't a CRUD
+* entering a wildcard with a value like {id} seems to make further autocomplete not process
+* suggest and handle POST/PUT params: key=value format
+* params: quotes to allow spaces, or not?

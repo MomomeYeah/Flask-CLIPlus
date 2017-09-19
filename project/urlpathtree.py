@@ -39,6 +39,8 @@ class urlpathnode(object):
     def __str__(self):
         return self.to_string()
 
+    # given a full URL, split it on slashes and recursively add its segements
+    # as URL path nodes
     def add_child_url(self, child_url, methods, definitions):
         nodes = child_url.strip("/").split("/")
         self.add_child(nodes, methods, definitions)
@@ -82,6 +84,8 @@ class urlpathnode(object):
             if method in child.descendent_methods
             ])
 
+    # return all children of the current node that are either wildcard nodes
+    # or whose name matches the specified token
     def find_matching_children(self, token):
         matches = [
             child for child in self.children.values()

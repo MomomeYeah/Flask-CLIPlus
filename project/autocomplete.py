@@ -24,6 +24,7 @@ class autocomplete(object):
         # generate path tree
         self.path_tree = urlpathtree(swagger_filename)
 
+    # Called from find_node_from_root - find node from tokens recursively
     def find_node(self, node, tokens):
         num_tokens = len(tokens)
 
@@ -49,12 +50,9 @@ class autocomplete(object):
         # return all nodes that we found
         return nodes
 
-    # TODO: handle scenario where first token isn't a CRUD
-    #
-    # TODO: entering a wildcard with a value like {id} doesn't seem to work?
-    #
-    # TODO: POST/PUT params: key=value format
-    # TODO: params: quotes to allow spaces, or not?
+    # given a list of tokens, find the URL path node that these tokens
+    # represent in the URL path tree, based on matching individual tokens with
+    # successive nodes
     def find_node_from_root(self, tokens):
         if not tokens:
             return [self.path_tree.root]
