@@ -93,11 +93,11 @@ class urlpathnode(object):
         return matches
 
 class urlpathtree(object):
-    def __init__(self, swagger_json):
+    def __init__(self, swagger_file_path):
         self.root = urlpathnode("/", False)
 
         try:
-            with open(swagger_json) as f:
+            with open(swagger_file_path) as f:
                 file_data = f.read()
 
             json_data = json.loads(file_data)

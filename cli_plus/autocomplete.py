@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import os, sys
 
 import rest_utils
@@ -8,17 +6,12 @@ from swagger_utils import get_swagger_api_definition
 from urlpathtree import urlpathtree
 
 class autocomplete(object):
-    def __init__(self):
+    def __init__(self, swagger_file_path):
         # get API definition
-        swagger_filename = "swagger.json"
-        json_path = os.path.join(
-            os.path.dirname(__file__),
-            swagger_filename)
-
-        get_swagger_api_definition("localhost", "5123", json_path)
+        get_swagger_api_definition("localhost", "5123", swagger_file_path)
 
         # generate path tree
-        self.path_tree = urlpathtree(swagger_filename)
+        self.path_tree = urlpathtree(swagger_file_path)
 
     # Called from find_node_from_root - find node from tokens recursively
     def find_node(self, node, tokens):
@@ -133,7 +126,12 @@ class autocomplete(object):
         return list(set(suggestions))
 
 if __name__ == "__main__":
-    ac = autocomplete()
+    swagger_filename = "swagger.json"
+    file_path = os.path.join(
+        os.path.dirname(__file__),
+        swagger_filename)
+
+    ac = autocomplete(file_path)
     print "{}\n\n".format(ac.path_tree)
 
     token_tests= [

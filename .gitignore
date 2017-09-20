@@ -2,4 +2,5 @@
 *.pyc
 *.log
 
-project/*.json
+cli_plus/*.json
+sample/*.json
