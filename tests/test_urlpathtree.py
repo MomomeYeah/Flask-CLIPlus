@@ -1,6 +1,6 @@
 import os, pytest, sys
 
-sys.path.append("..")
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from cli_plus.urlpathtree import urlpathtree
 from cli_plus import swagger_utils

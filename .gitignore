@@ -6,7 +6,7 @@ cli_plus/*.json
 sample/*.json
 
 # ignore tests cache
-tests/.cache/*
+.cache/
 
 # ignore all tests data except .gitkeep
 tests/data/*
