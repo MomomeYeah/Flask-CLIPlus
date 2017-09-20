@@ -46,6 +46,15 @@ class urlpathnode(object):
 
     def add_child(self, child_url_nodes, methods, definitions):
         first, rest = child_url_nodes[0], child_url_nodes[1:]
+
+        # if the current token represents a wildcard, e.g. {id}, replace the
+        # curly braces with square braces, so bash doesn't treat it as a
+        # brace expansion
+        wildcards = re.match("^{(.+)}$", first)
+        if wildcards:
+            first = "[{}]".format(wildcards.group(1))
+
+        # get REST method names
         method_keys = [method for method in methods]
 
         # some descendent of this node will have all members of `methods`

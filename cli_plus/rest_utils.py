@@ -1,4 +1,4 @@
-import json, re, requests
+import json, re, requests, urllib
 
 CRUD_METHODS = ['get', 'create', 'update', 'delete']
 REST_METHODS = ['get', 'post', 'put', 'delete']
@@ -39,7 +39,7 @@ def separate_url_segments_from_params(tokens):
         if param_pattern.match(token):
             params.append(token)
         else:
-            url_segments.append(token)
+            url_segments.append(urllib.quote_plus(token))
 
     return url_segments, params
 
