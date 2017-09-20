@@ -4,3 +4,10 @@
 
 cli_plus/*.json
 sample/*.json
+
+# ignore tests cache
+tests/.cache/*
+
+# ignore all tests data except .gitkeep
+tests/data/*
+!tests/data/.gitkeep

@@ -37,10 +37,15 @@ To install the autocomplete module, run `./install.sh`. Then, either exit the va
 
 Bash autocomplete requires a program name, so for demonstration purposes this is hardcoded to `./sample.py` which must be run from within `/vagrant/sample`.
 
+## Tests
+
+To run tests, `cd /vagrant/tests` and run `pytest`.  The sample API server will need to be running.
+
 ## TODO
 
 * param names/values with spaces: handle these or not?  Use quotes?
 * if a param is a file type, send this as a proper file.  Need to store param types as well as names in path tree
+* encapsulate swagger-specific code for easier integration of other API types
 * tests
 * add some level of swagger definition caching
-* encapsulate swagger-specific code for easier integration of other API types
+* autocomplete should probably accept a swagger file, rather than create it
