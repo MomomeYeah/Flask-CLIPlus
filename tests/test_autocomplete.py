@@ -4,6 +4,13 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from cli_plus.autocomplete import autocomplete
 
+def get_swagger_file_path():
+    swagger_filename = "swagger.json"
+    return os.path.join(
+        os.path.dirname(__file__),
+        "data",
+        swagger_filename)
+
 @pytest.mark.parametrize("tokens, suggestions", [
     (["get"], ["authors", "books"]),
     (["get", "books", "2"], []),
@@ -13,12 +20,8 @@ from cli_plus.autocomplete import autocomplete
     (["get", "authors", "1", "mismatch"], [])
 ])
 def test_suggestions(tokens, suggestions):
-    swagger_filename = "swagger.json"
-    file_path = os.path.join(
-        os.path.dirname(__file__),
-        "data",
-        swagger_filename)
-    ac = autocomplete(file_path)
+    swagger_file_path = get_swagger_file_path()
+    ac = autocomplete(swagger_file_path)
     ac_suggestions = ac.get_suggestions(tokens)
 
     assert len(suggestions) == len(ac_suggestions)

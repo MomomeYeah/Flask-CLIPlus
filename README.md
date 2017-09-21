@@ -48,4 +48,3 @@ To run tests, `cd /vagrant/tests` and run `pytest`.  The sample API server will 
 * encapsulate swagger-specific code for easier integration of other API types
 * tests
 * add some level of swagger definition caching
-* autocomplete should probably accept a swagger file, rather than create it

@@ -12,12 +12,6 @@ def get_swagger_file_path():
         "data",
         swagger_filename)
 
-@pytest.fixture(scope="session", autouse=True)
-def get_swagger_definition():
-    swagger_file_path = get_swagger_file_path()
-    swagger_utils.get_swagger_api_definition(
-        "localhost", "5123", swagger_file_path)
-
 @pytest.mark.parametrize("method, children", [
     ("get", ["authors", "books"]),
     ("get", ["authors", "books"]),

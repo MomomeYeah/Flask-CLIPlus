@@ -11,3 +11,4 @@ sample/*.json
 # ignore all tests data except .gitkeep
 tests/data/*
 !tests/data/.gitkeep
+!tests/data/swagger.json

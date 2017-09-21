@@ -7,9 +7,6 @@ from urlpathtree import urlpathtree
 
 class autocomplete(object):
     def __init__(self, swagger_file_path):
-        # get API definition
-        get_swagger_api_definition("localhost", "5123", swagger_file_path)
-
         # generate path tree
         self.path_tree = urlpathtree(swagger_file_path)
 
@@ -130,6 +127,7 @@ if __name__ == "__main__":
     file_path = os.path.join(
         os.path.dirname(__file__),
         swagger_filename)
+    get_swagger_api_definition("localhost", "5123", file_path)
 
     ac = autocomplete(file_path)
     print "{}\n\n".format(ac.path_tree)

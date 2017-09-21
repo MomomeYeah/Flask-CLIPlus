@@ -1,0 +1,589 @@
+{
+    "basePath": "/", 
+    "consumes": [
+        "application/json"
+    ], 
+    "definitions": {
+        "Author": {
+            "properties": {
+                "name": {
+                    "description": "The name of the author", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "name"
+            ], 
+            "type": "object"
+        }, 
+        "AuthorArticleList": {
+            "properties": {
+                "id": {
+                    "description": "Unique identifier", 
+                    "type": "integer"
+                }, 
+                "name": {
+                    "description": "The name of the article", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "name"
+            ], 
+            "type": "object"
+        }, 
+        "AuthorBookList": {
+            "properties": {
+                "author": {
+                    "description": "Author name", 
+                    "type": "string"
+                }, 
+                "id": {
+                    "description": "Unique author identifier", 
+                    "type": "integer"
+                }, 
+                "title": {
+                    "description": "Book title", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "author", 
+                "title"
+            ], 
+            "type": "object"
+        }, 
+        "AuthorList": {
+            "properties": {
+                "id": {
+                    "description": "Unique identifier", 
+                    "type": "integer"
+                }, 
+                "name": {
+                    "description": "The name of the author", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "name"
+            ], 
+            "type": "object"
+        }, 
+        "AuthorShortStoryList": {
+            "properties": {
+                "id": {
+                    "description": "Unique identifier", 
+                    "type": "integer"
+                }, 
+                "name": {
+                    "description": "The name of the short story", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "name"
+            ], 
+            "type": "object"
+        }, 
+        "Book": {
+            "properties": {
+                "author_id": {
+                    "description": "ID of this books author", 
+                    "type": "integer"
+                }, 
+                "published_year": {
+                    "description": "Year this book was published", 
+                    "type": "integer"
+                }, 
+                "title": {
+                    "description": "Title of this book", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "published_year", 
+                "title"
+            ], 
+            "type": "object"
+        }, 
+        "BookList": {
+            "properties": {
+                "author_id": {
+                    "description": "ID of this books author", 
+                    "type": "integer"
+                }, 
+                "id": {
+                    "description": "Unique identifier", 
+                    "type": "integer"
+                }, 
+                "published_year": {
+                    "description": "Year this book was published", 
+                    "type": "integer"
+                }, 
+                "title": {
+                    "description": "Title of this book", 
+                    "type": "string"
+                }
+            }, 
+            "required": [
+                "published_year", 
+                "title"
+            ], 
+            "type": "object"
+        }
+    }, 
+    "info": {
+        "description": "A simple Author API", 
+        "title": "Author API", 
+        "version": "1.0"
+    }, 
+    "paths": {
+        "/authors/": {
+            "get": {
+                "operationId": "get_author_list", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/AuthorList"
+                            }, 
+                            "type": "array"
+                        }
+                    }
+                }, 
+                "summary": "List all tasks", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "post": {
+                "operationId": "post_author_list", 
+                "parameters": [
+                    {
+                        "in": "body", 
+                        "name": "payload", 
+                        "required": true, 
+                        "schema": {
+                            "$ref": "#/definitions/Author"
+                        }
+                    }, 
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "201": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/AuthorList"
+                        }
+                    }
+                }, 
+                "summary": "Create a new author", 
+                "tags": [
+                    "authors"
+                ]
+            }
+        }, 
+        "/authors/{id}/": {
+            "delete": {
+                "operationId": "delete_author", 
+                "responses": {
+                    "204": {
+                        "description": "Author deleted"
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Delete an author given its identifier", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "get": {
+                "operationId": "get_author", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/AuthorList"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Fetch a given resource", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "parameters": [
+                {
+                    "description": "The author identifier", 
+                    "in": "path", 
+                    "name": "id", 
+                    "required": true, 
+                    "type": "integer"
+                }
+            ], 
+            "put": {
+                "operationId": "put_author", 
+                "parameters": [
+                    {
+                        "in": "body", 
+                        "name": "payload", 
+                        "required": true, 
+                        "schema": {
+                            "$ref": "#/definitions/Author"
+                        }
+                    }, 
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/AuthorList"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Update an author given its identifier", 
+                "tags": [
+                    "authors"
+                ]
+            }
+        }, 
+        "/authors/{id}/publications/articles/": {
+            "get": {
+                "operationId": "get_author_articles", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/AuthorArticleList"
+                            }, 
+                            "type": "array"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Fetch a given resource", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "parameters": [
+                {
+                    "description": "The author identifier", 
+                    "in": "path", 
+                    "name": "id", 
+                    "required": true, 
+                    "type": "integer"
+                }
+            ]
+        }, 
+        "/authors/{id}/publications/books/": {
+            "get": {
+                "operationId": "get_author_books", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/AuthorBookList"
+                            }, 
+                            "type": "array"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Fetch a given resource", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "parameters": [
+                {
+                    "description": "The author identifier", 
+                    "in": "path", 
+                    "name": "id", 
+                    "required": true, 
+                    "type": "integer"
+                }
+            ]
+        }, 
+        "/authors/{id}/publications/short-stories/": {
+            "get": {
+                "operationId": "get_author_short_stories", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/AuthorShortStoryList"
+                            }, 
+                            "type": "array"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }, 
+                "summary": "Fetch a given resource", 
+                "tags": [
+                    "authors"
+                ]
+            }, 
+            "parameters": [
+                {
+                    "description": "The author identifier", 
+                    "in": "path", 
+                    "name": "id", 
+                    "required": true, 
+                    "type": "integer"
+                }
+            ]
+        }, 
+        "/books/": {
+            "get": {
+                "operationId": "get_book_list", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/BookList"
+                            }, 
+                            "type": "array"
+                        }
+                    }
+                }, 
+                "summary": "List all books", 
+                "tags": [
+                    "books"
+                ]
+            }, 
+            "post": {
+                "operationId": "post_book_list", 
+                "parameters": [
+                    {
+                        "in": "body", 
+                        "name": "payload", 
+                        "required": true, 
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }, 
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "201": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/BookList"
+                        }
+                    }
+                }, 
+                "summary": "Create a new book", 
+                "tags": [
+                    "books"
+                ]
+            }
+        }, 
+        "/books/{id}/": {
+            "delete": {
+                "operationId": "delete_book", 
+                "responses": {
+                    "204": {
+                        "description": "Book deleted"
+                    }, 
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }, 
+                "summary": "Delete a book given its identifier", 
+                "tags": [
+                    "books"
+                ]
+            }, 
+            "get": {
+                "operationId": "get_book", 
+                "parameters": [
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/BookList"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }, 
+                "summary": "Fetch a given resource", 
+                "tags": [
+                    "books"
+                ]
+            }, 
+            "parameters": [
+                {
+                    "description": "The book identifier", 
+                    "in": "path", 
+                    "name": "id", 
+                    "required": true, 
+                    "type": "integer"
+                }
+            ], 
+            "put": {
+                "operationId": "put_book", 
+                "parameters": [
+                    {
+                        "in": "body", 
+                        "name": "payload", 
+                        "required": true, 
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }, 
+                    {
+                        "description": "An optional fields mask", 
+                        "format": "mask", 
+                        "in": "header", 
+                        "name": "X-Fields", 
+                        "type": "string"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "schema": {
+                            "$ref": "#/definitions/BookList"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }, 
+                "summary": "Update a book given its identifier", 
+                "tags": [
+                    "books"
+                ]
+            }
+        }
+    }, 
+    "produces": [
+        "application/json"
+    ], 
+    "responses": {
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }, 
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        }
+    }, 
+    "swagger": "2.0", 
+    "tags": [
+        {
+            "description": "Default namespace", 
+            "name": "default"
+        }, 
+        {
+            "description": "Author operations", 
+            "name": "authors"
+        }, 
+        {
+            "description": "Book operations", 
+            "name": "books"
+        }
+    ]
+}
