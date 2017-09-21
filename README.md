@@ -1,5 +1,7 @@
 # Dynamic CLI
 
+[![Build Status](https://travis-ci.org/MomomeYeah/Flask-CLIPlus.svg?branch=master)](https://travis-ci.org/MomomeYeah/Flask-CLIPlus)
+
 ## What is this Project?
 
 This project is a Dynamic CLI generator designed for use with Flask-RESTPlus, though it should work for any REST API that serves a swagger definition file at http://host:port/swagger.json.  In principle there's no reason that this project couldn't work with any REST service that provides some means of route/method discovery, but for now swagger is all that is supported.
